@@ -903,6 +903,21 @@
           📥 Сохранить как PDF / Изображение
         </button>
       </div>
+
+      <div class="share-section" style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0e0e6;">
+        <h4>🌟 Поделиться результатом в соцсетях</h4>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">Укажи свои соцсети (не обязательно):</p>
+        <div class="social-inputs" style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem;">Instagram: <input type="text" id="instagramLink" placeholder="@username" style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; width: 200px;"></label>
+          <label style="display: block; margin-bottom: 0.5rem;">VK: <input type="text" id="vkLink" placeholder="vk.com/username" style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; width: 200px;"></label>
+          <label style="display: block; margin-bottom: 0.5rem;">Telegram: <input type="text" id="telegramLink" placeholder="@username" style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; width: 200px;"></label>
+        </div>
+        <div class="share-buttons">
+          <button onclick="shareToVK()" style="background: #4C75A3; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin: 5px; cursor: pointer;">VK</button>
+          <button onclick="shareToTelegram()" style="background: #0088CC; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin: 5px; cursor: pointer;">Telegram</button>
+          <button onclick="copyResult()" style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin: 5px; cursor: pointer;">Скопировать текст</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1367,6 +1382,71 @@
             Пройти тест ещё раз
           </button>
         </div>
+      `;
+    }
+
+    function shareToVK() {
+      const resultText = document.getElementById('resultText').textContent;
+      const instagram = document.getElementById('instagramLink').value.trim();
+      const vk = document.getElementById('vkLink').value.trim();
+      const telegram = document.getElementById('telegramLink').value.trim();
+
+      let socialLinks = '';
+      if (instagram) socialLinks += ` Instagram: ${instagram}`;
+      if (vk) socialLinks += ` VK: ${vk}`;
+      if (telegram) socialLinks += ` Telegram: ${telegram}`;
+
+      const text = `Прошла тест на типаж внешности и получила результат: ${resultText}!${socialLinks ? `\nМои соцсети:${socialLinks}` : ''}\n\n#типажвнешности #beauty #стиль`;
+      const url = `https://vk.com/share.php?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    function shareToTelegram() {
+      const resultText = document.getElementById('resultText').textContent;
+      const instagram = document.getElementById('instagramLink').value.trim();
+      const vk = document.getElementById('vkLink').value.trim();
+      const telegram = document.getElementById('telegramLink').value.trim();
+
+      let socialLinks = '';
+      if (instagram) socialLinks += `%0AInstagram: ${instagram}`;
+      if (vk) socialLinks += `%0AVK: ${vk}`;
+      if (telegram) socialLinks += `%0ATelegram: ${telegram}`;
+
+      const text = `Пройдила тест на типаж внешности и получила результат: ${resultText}!${socialLinks ? `%0AМои соцсети:${socialLinks}` : ''}%0A%0A#типажвнешности #beauty #стиль`;
+      const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+
+    function copyResult() {
+      const resultText = document.getElementById('resultText').textContent;
+      const instagram = document.getElementById('instagramLink').value.trim();
+      const vk = document.getElementById('vkLink').value.trim();
+      const telegram = document.getElementById('telegramLink').value.trim();
+
+      let socialLinks = '';
+      if (instagram) socialLinks += `\nInstagram: ${instagram}`;
+      if (vk) socialLinks += `\nVK: ${vk}`;
+      if (telegram) socialLinks += `\nTelegram: ${telegram}`;
+
+      const text = `Пройдила тест на типаж внешности и получила результат: ${resultText}!${socialLinks ? `\nМои соцсети:${socialLinks}` : ''}\n\n#типажвнешности #beauty #стиль\nСсылка на тест: ${window.location.href}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Текст скопирован в буфер обмена!');
+      }).catch(err => {
+        console.error('Ошибка копирования:', err);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert('Текст скопирован в буфер обмена!');
+      });
+    }
+  </script>
+</body>
+</html>
       `;
     }
   </script>
